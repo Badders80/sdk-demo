@@ -23,8 +23,17 @@ export default defineConfig({
   // worker: {
   //  plugins: [ nxViteTsPaths() ],
   // },
+  resolve: {
+    alias: {
+      buffer: 'buffer',
+      process: 'process/browser',
+    },
+  },
   define: {
     'process.env': {},
+  },
+  optimizeDeps: {
+    include: ['buffer', 'process'],
   },
   base: './',
   build: {
