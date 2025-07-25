@@ -1,21 +1,22 @@
-import { FutureverseAuthClient } from '@futureverse/auth-react/auth';
-import { createWagmiConfig } from '@futureverse/wagmi-connectors';
+import { FutureverseAuthClient } from '@futureverse/auth';
+import { createWagmiConfig } from '@futureverse/auth-react';
 import { QueryClient } from '@tanstack/react-query';
 
+console.log('Environment variables:', {
+  clientId: import.meta.env.VITE_FUTUREVERSE_CLIENT_ID,
+  mode: import.meta.env.MODE,
+  prod: import.meta.env.PROD,
+});
+
 export const authClient = new FutureverseAuthClient({
-  clientId: import.meta.env.VITE_FUTUREVERSE_CLIENT_ID || import.meta.env.VITE_FV_APP_ID,
+  clientId: import.meta.env.VITE_FUTUREVERSE_CLIENT_ID,
   environment: 'staging',
-  redirectUri: 'http://localhost:4203/auth',
-  postLogoutRedirectUri: 'http://localhost:4203',
+  redirectUri: 'http://localhost:4200/callback',
+  postLogoutRedirectUri: 'http://localhost:4200',
 });
 
-// Debug logging
-console.log('Auth Client Config:', {
-  clientId: import.meta.env.VITE_FUTUREVERSE_CLIENT_ID || import.meta.env.VITE_FV_APP_ID,
-  environment: 'staging',
-  redirectUri: 'http://localhost:4203/auth',
-});
-
-export const queryClient = new QueryClient();
+console.log('Auth client created successfully for staging environment');
 
 export const wagmiConfig = createWagmiConfig({ authClient });
+
+export const queryClient = new QueryClient();

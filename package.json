@@ -9,8 +9,8 @@
   },
   "private": true,
   "dependencies": {
-    "@futureverse/auth": "^5.0.0",
-    "@futureverse/auth-react": "^5.0.0",
+    "@futureverse/auth": "^4.4.0",
+    "@futureverse/auth-react": "^4.4.0",
     "@futureverse/auth-ui": "^1.0.0",
     "@futureverse/wagmi-connectors": "latest",
     "@rollup/plugin-commonjs": "^26.0.1",
