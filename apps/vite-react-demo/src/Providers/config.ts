@@ -17,6 +17,15 @@ export const authClient = new FutureverseAuthClient({
 
 console.log('Auth client created successfully for staging environment');
 
-export const wagmiConfig = createWagmiConfig({ authClient });
+let wagmiConfig;
+try {
+  wagmiConfig = createWagmiConfig({ authClient });
+  console.log('Wagmi config created successfully');
+} catch (error) {
+  console.error('Failed to create wagmi config:', error);
+  throw error;
+}
+
+export { wagmiConfig };
 
 export const queryClient = new QueryClient();
