@@ -5,8 +5,15 @@ import { QueryClient } from '@tanstack/react-query';
 export const authClient = new FutureverseAuthClient({
   clientId: import.meta.env.VITE_FUTUREVERSE_CLIENT_ID || import.meta.env.VITE_FV_APP_ID,
   environment: 'staging',
-  redirectUri: 'http://localhost:4200/callback',
-  postLogoutRedirectUri: 'http://localhost:4200',
+  redirectUri: 'http://localhost:4203/auth',
+  postLogoutRedirectUri: 'http://localhost:4203',
+});
+
+// Debug logging
+console.log('Auth Client Config:', {
+  clientId: import.meta.env.VITE_FUTUREVERSE_CLIENT_ID || import.meta.env.VITE_FV_APP_ID,
+  environment: 'staging',
+  redirectUri: 'http://localhost:4203/auth',
 });
 
 export const queryClient = new QueryClient();

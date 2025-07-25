@@ -9,9 +9,9 @@
   },
   "private": true,
   "dependencies": {
-    "@futureverse/auth": "latest",
-    "@futureverse/auth-react": "latest",
-    "@futureverse/auth-ui": "latest",
+    "@futureverse/auth": "^5.0.0",
+    "@futureverse/auth-react": "^5.0.0",
+    "@futureverse/auth-ui": "^1.0.0",
     "@futureverse/wagmi-connectors": "latest",
     "@rollup/plugin-commonjs": "^26.0.1",
     "@tanstack/react-query": "^5.51.21",
