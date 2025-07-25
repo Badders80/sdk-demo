@@ -2,6 +2,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
+import path from 'path';
 
 export default defineConfig({
   root: __dirname,
@@ -17,7 +19,31 @@ export default defineConfig({
     host: 'localhost',
   },
 
-  plugins: [react(), nxViteTsPaths()],
+  plugins: [
+    react(),
+    nxViteTsPaths(),
+    nodePolyfills({
+      include: ['buffer', 'process', 'util', 'stream', 'crypto', 'assert'],
+      globals: { Buffer: true, global: true, process: true },
+    }),
+  ],
+
+  resolve: {
+    alias: {
+      'bn.js': 'bn.js/lib/bn.js',
+      'buffer': 'buffer',
+    },
+  },
+
+  optimizeDeps: {
+    include: [
+      'bn.js',
+      'buffer',
+      '@polkadot/util',
+      '@polkadot/util-crypto',
+      '@polkadot/api',
+    ],
+  },
 
   // Uncomment this if you are using workers.
   // worker: {
@@ -37,6 +63,20 @@ export default defineConfig({
     },
     commonjsOptions: {
       transformMixedEsModules: true,
+    },
+  },
+
+  test: {
+    globals: true,
+    cache: {
+      dir: '../../node_modules/.vitest',
+    },
+    environment: 'jsdom',
+    include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    reporters: ['default'],
+    coverage: {
+      reportsDirectory: '../../coverage/apps/vite-react-demo',
+      provider: 'v8',
     },
   },
 });

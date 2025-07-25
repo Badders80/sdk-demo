@@ -2,7 +2,6 @@ import './App.css';
 import React from 'react';
 import { Routes, Route, Outlet, Link } from 'react-router-dom';
 import {
-  Evm,
   Home,
   Assets,
   Custom,
@@ -18,8 +17,9 @@ import {
   EvmErc1155,
   FeeProxy,
   FuturePassProxy,
-  AssetLink,
   ViewAssetsComp,
+  Evm,
+  AssetLink,
 } from '@fv-sdk-demos/ui-shared';
 import Login from './components/Login';
 import Nav, { MobileMenu } from './components/Nav';
