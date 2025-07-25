@@ -1,88 +1,94 @@
 import './App.css';
 import React from 'react';
-import { Routes, Route, Outlet, Link } from 'react-router-dom';
-import {
-  Home,
-  Assets,
-  Custom,
-  Nft,
-  CustomBuilder,
-  Header,
-  useIsMobile,
-  Footer,
-  LogoIcon,
-  BatchAll,
-  EvmErc20,
-  EvmErc721,
-  EvmErc1155,
-  FeeProxy,
-  FuturePassProxy,
-  ViewAssetsComp,
-  Evm,
-  AssetLink,
-} from '@fv-sdk-demos/ui-shared';
-import Login from './components/Login';
-import Nav, { MobileMenu } from './components/Nav';
-import useIsAuthed from './hooks/useIsAuthed';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from '@futureverse/auth-react';
+
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { userSession } = useAuth();
+  return userSession ? <>{children}</> : <Navigate to="/" />;
+}
+
+function Home() {
+  const { userSession, authClient } = useAuth();
+  
+  if (userSession) {
+    return <Navigate to="/dashboard" />;
+  }
+  
+  return (
+    <div style={{ padding: '2rem', textAlign: 'center' }}>
+      <h1>Welcome to Evolution Stables</h1>
+      <p>Sign in for waitlist access and exclusive updates.</p>
+      <div style={{ marginTop: '2rem' }}>
+        <button 
+          onClick={() => authClient.signIn()} 
+          style={{ 
+            padding: '1rem 2rem', 
+            backgroundColor: '#007bff', 
+            color: 'white', 
+            border: 'none', 
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '1rem'
+          }}
+        >
+          Sign In with Futureverse
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function Dashboard() {
+  const { userSession, authClient } = useAuth();
+  
+  const handleLogout = () => {
+    authClient.signOut();
+  };
+  
+  return (
+    <div style={{ padding: '2rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <h1>Dashboard</h1>
+        <button onClick={handleLogout} style={{ padding: '0.5rem 1rem' }}>Logout</button>
+      </div>
+      <p>Welcome, {userSession?.futurepass || userSession?.eoa || 'User'}!</p>
+      <p>🐎 Join our exclusive Evolution Stables waitlist for early access to racehorse tokenization.</p>
+      <div style={{ marginTop: '2rem' }}>
+        <h3>Quick Actions:</h3>
+        <ul>
+          <li>✅ Profile completed</li>
+          <li>🎯 Waitlist status: Active</li>
+          <li>📧 Email notifications enabled</li>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function Profile() {
+  const { userSession } = useAuth();
+  return (
+    <div style={{ padding: '2rem' }}>
+      <h1>Profile</h1>
+      <p>Manage your Evolution Stables profile and preferences.</p>
+      <div style={{ marginTop: '2rem' }}>
+        <h3>User Information:</h3>
+        <p><strong>FuturePass:</strong> {userSession?.futurepass || 'Not connected'}</p>
+        <p><strong>EOA:</strong> {userSession?.eoa || 'Not connected'}</p>
+        <p><strong>Status:</strong> Active Member</p>
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route
-          index
-          element={
-            <Home title="Welcome to the Root Network SDK Playground (Vite)" />
-          }
-        />
-        <Route path="/transact/assets" element={<Assets />} />
-        <Route path="/transact/batch-all" element={<BatchAll />} />
-        <Route path="/transact/custom" element={<Custom />} />
-        <Route path="/transact/custom-builder" element={<CustomBuilder />} />
-        <Route path="/transact/evm" element={<Evm />} />
-        <Route path="/transact/nft" element={<Nft />} />
-
-        <Route path="/evm/erc-20" element={<EvmErc20 />} />
-        <Route path="/evm/erc-721" element={<EvmErc721 />} />
-        <Route path="/evm/erc-1155" element={<EvmErc1155 />} />
-        <Route path="/evm/fee-proxy" element={<FeeProxy />} />
-        <Route path="/evm/futurePass-proxy" element={<FuturePassProxy />} />
-
-        <Route path="/asset-register/view" element={<ViewAssetsComp />} />
-        <Route path="/asset-register/link" element={<AssetLink />} />
-
-        <Route path="/login" element={<Login />} />
-      </Route>
+      <Route path="/" element={<Home />} />
+      <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+      <Route path="/callback" element={<div style={{ padding: '2rem', textAlign: 'center' }}>Authenticating...</div>} />
     </Routes>
-  );
-}
-
-function Layout() {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const isMobile = useIsMobile(992);
-
-  useIsAuthed({ redirectUrl: '/' });
-
-  return (
-    <div className="body-wrap">
-      <div>
-        <Header
-          Nav={() => <Nav setIsOpen={setIsOpen} isOpen={isOpen} />}
-          Logo={() => (
-            <div className="header__logo__row">
-              <Link to="/">
-                <LogoIcon />
-              </Link>
-              <span className="pill">Porcini</span>
-            </div>
-          )}
-        />
-      </div>
-      {isOpen && isMobile && <MobileMenu setIsOpen={setIsOpen} />}
-      <div className="inner">
-        <Outlet />
-      </div>
-      <Footer />
-    </div>
   );
 }

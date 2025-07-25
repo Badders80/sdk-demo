@@ -2,8 +2,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
-import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import path from 'path';
 
 export default defineConfig({
   root: __dirname,
@@ -19,31 +17,7 @@ export default defineConfig({
     host: 'localhost',
   },
 
-  plugins: [
-    react(),
-    nxViteTsPaths(),
-    nodePolyfills({
-      include: ['buffer', 'process', 'util', 'stream', 'crypto', 'assert'],
-      globals: { Buffer: true, global: true, process: true },
-    }),
-  ],
-
-  resolve: {
-    alias: {
-      'bn.js': 'bn.js/lib/bn.js',
-      'buffer': 'buffer',
-    },
-  },
-
-  optimizeDeps: {
-    include: [
-      'bn.js',
-      'buffer',
-      '@polkadot/util',
-      '@polkadot/util-crypto',
-      '@polkadot/api',
-    ],
-  },
+  plugins: [react(), nxViteTsPaths()],
 
   // Uncomment this if you are using workers.
   // worker: {

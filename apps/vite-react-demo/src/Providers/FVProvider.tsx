@@ -1,61 +1,20 @@
 import React from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { FutureverseAuthProvider } from '@futureverse/auth-react';
+import { AuthUiProvider, DefaultTheme } from '@futureverse/auth-ui';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { authClient } from './config';
 
-import {
-  FutureverseAuthProvider,
-  FutureverseWagmiProvider,
-} from '@futureverse/auth-react';
+const queryClient = new QueryClient();
 
-import { QueryClientProvider } from '@tanstack/react-query';
-import { authClient, getWagmiConfig, queryClient } from './config';
-
-import { State } from 'wagmi';
-import {
-  type ThemeConfig,
-  DefaultTheme,
-  AuthUiProvider,
-} from '@futureverse/auth-ui';
-import { RootStoreProvider } from '@fv-sdk-demos/ui-shared';
-import type { NetworkName } from '@therootnetwork/api';
-import { TrnApiProvider } from '@futureverse/transact-react';
-import { AssetRegisterProvider } from './AssetRegisterProvider';
-
-const customThemeConfig: ThemeConfig = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-  },
-};
-
-const network = (process.env.NEXT_PUBLIC_NETWORK ?? 'porcini') as
-  | NetworkName
-  | undefined;
-
-export default function Providers({
-  children,
-  initialWagmiState,
-}: {
-  children: React.ReactNode;
-  initialWagmiState?: State;
-}) {
+export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <TrnApiProvider network={network}>
-        <FutureverseWagmiProvider
-          getWagmiConfig={getWagmiConfig}
-          initialState={initialWagmiState}
-        >
-          <RootStoreProvider>
-            <FutureverseAuthProvider authClient={authClient}>
-              <AuthUiProvider
-                themeConfig={customThemeConfig}
-                authClient={authClient}
-              >
-                <AssetRegisterProvider>{children}</AssetRegisterProvider>
-              </AuthUiProvider>
-            </FutureverseAuthProvider>
-          </RootStoreProvider>
-        </FutureverseWagmiProvider>
-      </TrnApiProvider>
+      <FutureverseAuthProvider authClient={authClient}>
+        <AuthUiProvider themeConfig={DefaultTheme} authClient={authClient}>
+          <Router>{children}</Router>
+        </AuthUiProvider>
+      </FutureverseAuthProvider>
     </QueryClientProvider>
   );
 }
