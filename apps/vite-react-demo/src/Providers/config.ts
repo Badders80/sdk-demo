@@ -1,5 +1,5 @@
 import { FutureverseAuthClient } from '@futureverse/auth';
-import { createWagmiConfig } from '@futureverse/auth-react';
+import { createWagmiConfig } from '@futureverse/auth-react/wagmi';
 import { QueryClient } from '@tanstack/react-query';
 
 console.log('Environment variables:', {
