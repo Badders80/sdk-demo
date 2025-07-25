@@ -88,6 +88,7 @@ export default function App() {
       <Route path="/" element={<Home />} />
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+      <Route path="/auth" element={<div style={{ padding: '2rem', textAlign: 'center' }}>Authenticating...</div>} />
       <Route path="/callback" element={<div style={{ padding: '2rem', textAlign: 'center' }}>Authenticating...</div>} />
     </Routes>
   );
